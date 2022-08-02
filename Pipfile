@@ -7,6 +7,7 @@ name = "pypi"
 streamlit = "*"
 
 [dev-packages]
+watchdog = "*"
 
 [requires]
 python_version = "3.8"
