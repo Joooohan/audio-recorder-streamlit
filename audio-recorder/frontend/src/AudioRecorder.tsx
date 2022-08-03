@@ -10,11 +10,13 @@ interface State {
   isFocused: boolean
 }
 
-/**
- * This is a React-based component template. The `render()` function is called
- * automatically when your component should be re-rendered.
- */
-class AudioRecorder extends StreamlitComponentBase<State> {
+interface AudioData {
+  blob: Blob
+  url: string
+  type: string
+}
+
+class MyComponent extends StreamlitComponentBase<State> {
   public state = { numClicks: 0, isFocused: false }
 
   stream: MediaStream | null = null;
@@ -282,11 +284,16 @@ class AudioRecorder extends StreamlitComponentBase<State> {
   }
 
   private onClicked = async () => {
-    await this.setupMic();
+    if (!this.recording){
+      await this.start()
+    } else {
+      this.stop()
+    }
+
   }
 
-  onStop = (data: any) => {
-
+  onStop = (data: AudioData) => {
+    console.log(data.url);
   }
 
 }
