@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react"
 import {
-  Streamlit,
   StreamlitComponentBase,
   withStreamlitConnection
 } from "streamlit-component-lib"
@@ -17,6 +16,22 @@ interface State {
  */
 class AudioRecorder extends StreamlitComponentBase<State> {
   public state = { numClicks: 0, isFocused: false }
+  stream: MediaStream | null = null
+
+  //get mic stream
+  getStream = (): Promise<MediaStream> => {
+    return navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+  };
+
+  setupMic = async () => {
+    try {
+      window.stream = this.stream = await this.getStream();
+    } catch (err) {
+      console.log("Error: Issue getting mic", err);
+    }
+
+    // this.setUpRecording();
+  };
 
   public render = (): ReactNode => {
     // Arguments that are passed to the plugin in Python are accessible
@@ -41,10 +56,6 @@ class AudioRecorder extends StreamlitComponentBase<State> {
       style.outline = borderStyling
     }
 
-    // Show a button and some text.
-    // When the button is clicked, we'll increment our "numClicks" state
-    // variable, and send its new value back to Streamlit, where it'll
-    // be available to the Python program.
     return (
       <span>
         Click to record &nbsp;
@@ -53,15 +64,10 @@ class AudioRecorder extends StreamlitComponentBase<State> {
     )
   }
 
-  /** Click handler for our "Click Me!" button. */
-  private onClicked = (): void => {
-    // Increment state.numClicks, and pass the new value back to
-    // Streamlit via `Streamlit.setComponentValue`.
-    this.setState(
-      prevState => ({ numClicks: prevState.numClicks + 1 }),
-      () => Streamlit.setComponentValue(this.state.numClicks)
-    )
+  private onClicked = async () => {
+    await this.setupMic();
   }
+
 }
 
 // "withStreamlitConnection" is a wrapper function. It bootstraps the
