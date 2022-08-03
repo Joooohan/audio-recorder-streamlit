@@ -4,6 +4,7 @@ import {
   StreamlitComponentBase,
   withStreamlitConnection
 } from "streamlit-component-lib"
+import RecordButton from "./RecordButton"
 
 interface State {
   numClicks: number
@@ -46,16 +47,8 @@ class AudioRecorder extends StreamlitComponentBase<State> {
     // be available to the Python program.
     return (
       <span>
-        Hello, {name}! &nbsp;
-        <button
-          style={style}
-          onClick={this.onClicked}
-          disabled={this.props.disabled}
-          onFocus={this._onFocus}
-          onBlur={this._onBlur}
-        >
-          Click Me!
-        </button>
+        Click to record &nbsp;
+        <RecordButton onClick={this.onClicked}></RecordButton>
       </span>
     )
   }
@@ -68,16 +61,6 @@ class AudioRecorder extends StreamlitComponentBase<State> {
       prevState => ({ numClicks: prevState.numClicks + 1 }),
       () => Streamlit.setComponentValue(this.state.numClicks)
     )
-  }
-
-  /** Focus handler for our "Click Me!" button. */
-  private _onFocus = (): void => {
-    this.setState({ isFocused: true })
-  }
-
-  /** Blur handler for our "Click Me!" button. */
-  private _onBlur = (): void => {
-    this.setState({ isFocused: false })
   }
 }
 
