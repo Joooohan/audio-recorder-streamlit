@@ -26,9 +26,10 @@ class MyComponent extends StreamlitComponentBase<State> {
   sampleRate: number | null = null;
   phrase_buffer_count: number | null = null;
   pause_buffer_count: number | null = null;
-  pause_count: number | null = null;
+  pause_count: number = 0;
   pause_threshold: number = 0.8;
   phrase_threshold: number = 0.3;
+  energy_threshold: number = 0.01;
   stage: string | null = null;
   volume: any = null;
   audioInput: any = null;
@@ -40,6 +41,7 @@ class MyComponent extends StreamlitComponentBase<State> {
   leftBuffer: Float32Array | null = null;
   rightBuffer: Float32Array | null = null;
   recordingLength: number = 0;
+  tested: boolean = false;
 
   //get mic stream
   getStream = (): Promise<MediaStream> => {
@@ -139,55 +141,56 @@ class MyComponent extends StreamlitComponentBase<State> {
     // finally connect the processor to the output
     this.recorder.connect(this.context.destination);
 
+    const self = this;
     this.recorder.onaudioprocess = function (e: any) {
       // Check
-      if (!this.recording) return;
+      if (!self.recording) return;
       // Do something with the data, i.e Convert this to WAV
       let left = e.inputBuffer.getChannelData(0);
       let right = e.inputBuffer.getChannelData(1);
-      if (!this.tested) {
-        this.tested = true;
+      if (!self.tested) {
+        self.tested = true;
         // if this reduces to 0 we are not getting any sound
         if (!left.reduce((a: number, b: number) => a + b)) {
           console.log("Error: There seems to be an issue with your Mic");
           // clean up;
-          this.stop();
-          this.stream.getTracks().forEach(function (track: any) {
+          self.stop();
+          self.stream!.getTracks().forEach(function (track: any) {
             track.stop();
           });
-          this.context.close();
+          self.context.close();
         }
       }
       // Check energy level
       let energy = Math.sqrt(
         left.map((x: number) => x * x).reduce((a: number, b: number) => a + b) / left.length
       );
-      if (this.stage === "start" && energy > this.energy_threshold) {
-        this.stage = "speaking";
-      } else if (this.stage === "speaking") {
-        if (energy > this.energy_threshold) {
-          this.pause_count = 0;
+      if (self.stage === "start" && energy > self.energy_threshold) {
+        self.stage = "speaking";
+      } else if (self.stage === "speaking") {
+        if (energy > self.energy_threshold) {
+          self.pause_count = 0;
         } else {
-          this.pause_count += 1;
-          if (this.pause_count > this.pause_buffer_count) {
-            this.stop();
+          self.pause_count += 1;
+          if (self.pause_count > self.pause_buffer_count!) {
+            self.stop();
           }
         }
       }
-      let radius = 33.0 + Math.sqrt(1000.0 * energy);
-      this.props.setRadius(radius.toString());
+      // let radius = 33.0 + Math.sqrt(1000.0 * energy);
+      // this.props.setRadius(radius.toString());
 
       // we clone the samples
-      this.leftchannel.push(new Float32Array(left));
-      this.rightchannel.push(new Float32Array(right));
-      this.recordingLength += bufferSize;
+      self.leftchannel.push(new Float32Array(left));
+      self.rightchannel.push(new Float32Array(right));
+      self.recordingLength += bufferSize;
     };
     // this.visualize();
   };
 
   start = async () => {
-    await this.setupMic();
     this.recording = true;
+    await this.setupMic();
     // reset the buffers for the new recording
     this.leftchannel.length = this.rightchannel.length = 0;
     this.recordingLength = 0;
@@ -196,6 +199,7 @@ class MyComponent extends StreamlitComponentBase<State> {
   stop = async () => {
     this.recording = false;
     this.closeMic();
+    console.log(this.recordingLength);
 
     // we flat the left and right channels down
     this.leftBuffer = this.mergeBuffers(this.leftchannel, this.recordingLength);
