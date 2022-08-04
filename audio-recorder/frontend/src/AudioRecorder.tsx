@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react"
 import {
+  Streamlit,
   StreamlitComponentBase,
   withStreamlitConnection
 } from "streamlit-component-lib"
@@ -192,7 +193,7 @@ class MyComponent extends StreamlitComponentBase<State> {
     this.recordingLength = 0;
   };
 
-  stop = () => {
+  stop = async () => {
     this.recording = false;
     this.closeMic();
 
@@ -245,7 +246,7 @@ class MyComponent extends StreamlitComponentBase<State> {
     const audioUrl = URL.createObjectURL(blob);
 
 
-    this.onStop({
+    await this.onStop({
       blob: blob,
       url: audioUrl,
       type: this.type,
@@ -255,7 +256,7 @@ class MyComponent extends StreamlitComponentBase<State> {
   public render = (): ReactNode => {
     // Arguments that are passed to the plugin in Python are accessible
     // via `this.props.args`. Here, we access the "name" arg.
-    const name = this.props.args["name"]
+    // const name = this.props.args["name"]
 
     // Streamlit sends us a theme object via props that we can use to ensure
     // that our component has visuals that match the active theme in a
@@ -287,13 +288,15 @@ class MyComponent extends StreamlitComponentBase<State> {
     if (!this.recording){
       await this.start()
     } else {
-      this.stop()
+      await this.stop()
     }
 
   }
 
-  onStop = (data: AudioData) => {
-    console.log(data.url);
+  private onStop = async (data: AudioData) => {
+    var buffer = await data.blob.arrayBuffer();
+    var json_string = JSON.stringify(Array.from(new Uint8Array(buffer)));
+    Streamlit.setComponentValue(json_string);
   }
 
 }

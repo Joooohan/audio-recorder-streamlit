@@ -44,8 +44,8 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def audio_recorder(name, key=None):
-    """Create a new instance of "audio_recorder".
+def my_component(key=None):
+    """Create a new instance of "my_component".
 
     Parameters
     ----------
@@ -71,37 +71,20 @@ def audio_recorder(name, key=None):
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    component_value = _audio_recorder(name=name, key=key, default=0)
+    component_value = _component_func(key=key, default=None)
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.
     return component_value
 
 
-# Add some test code to play with the component while it's in development.
-# During development, we can run this just as we would any other Streamlit
-# app: `$ streamlit run my_component/__init__.py`
 if not _RELEASE:
+    import json
+
     import streamlit as st
 
-    st.subheader("Component with constant args")
-
-    # Create an instance of our component with a constant `name` arg, and
-    # print its output value.
-    num_clicks = audio_recorder("World")
-    st.markdown("You've clicked %s times!" % int(num_clicks))
-
-    st.markdown("---")
-    st.subheader("Component with variable args")
-
-    # Create a second instance of our component whose `name` arg will vary
-    # based on a text_input widget.
-    #
-    # We use the special "key" argument to assign a fixed identity to this
-    # component instance. By default, when a component's arguments change,
-    # it is considered a new instance and will be re-mounted on the frontend
-    # and lose its current state. In this case, we want to vary the component's
-    # "name" argument without having it get recreated.
-    name_input = st.text_input("Enter a name", value="Streamlit")
-    num_clicks = audio_recorder(name_input, key="foo")
-    st.markdown("You've clicked %s times!" % int(num_clicks))
+    st.subheader("Audio recorder")
+    data = my_component()
+    if data:
+        audio_bytes = bytes(json.loads(data))
+        st.audio(audio_bytes, format="audio/wav")
