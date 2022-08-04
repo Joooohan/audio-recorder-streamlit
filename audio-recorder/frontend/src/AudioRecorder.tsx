@@ -7,8 +7,7 @@ import {
 import RecordButton from "./RecordButton"
 
 interface State {
-  numClicks: number
-  isFocused: boolean
+  color: string
 }
 
 interface AudioData {
@@ -17,8 +16,10 @@ interface AudioData {
   type: string
 }
 
+const NEUTRAL_COLOR = "#303030";
+const RECORDING_COLOR = "#de1212";
 class MyComponent extends StreamlitComponentBase<State> {
-  public state = { numClicks: 0, isFocused: false }
+  public state = { color: NEUTRAL_COLOR }
 
   stream: MediaStream | null = null;
   AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -190,6 +191,9 @@ class MyComponent extends StreamlitComponentBase<State> {
 
   start = async () => {
     this.recording = true;
+    this.setState({
+      color: RECORDING_COLOR
+    })
     await this.setupMic();
     // reset the buffers for the new recording
     this.leftchannel.length = this.rightchannel.length = 0;
@@ -198,6 +202,9 @@ class MyComponent extends StreamlitComponentBase<State> {
 
   stop = async () => {
     this.recording = false;
+    this.setState({
+      color: NEUTRAL_COLOR
+    })
     this.closeMic();
     console.log(this.recordingLength);
 
@@ -258,10 +265,6 @@ class MyComponent extends StreamlitComponentBase<State> {
   };
 
   public render = (): ReactNode => {
-    // Arguments that are passed to the plugin in Python are accessible
-    // via `this.props.args`. Here, we access the "name" arg.
-    // const name = this.props.args["name"]
-
     // Streamlit sends us a theme object via props that we can use to ensure
     // that our component has visuals that match the active theme in a
     // streamlit app.
@@ -271,19 +274,13 @@ class MyComponent extends StreamlitComponentBase<State> {
     // Maintain compatibility with older versions of Streamlit that don't send
     // a theme object.
     if (theme) {
-      // Use the theme object to style our button border. Alternatively, the
-      // theme style is defined in CSS vars.
-      const borderStyling = `1px solid ${
-        this.state.isFocused ? theme.primaryColor : "gray"
-      }`
-      style.border = borderStyling
-      style.outline = borderStyling
+
     }
 
     return (
       <span>
         Click to record &nbsp;
-        <RecordButton onClick={this.onClicked}></RecordButton>
+        <RecordButton onClick={this.onClicked} color="white" fillColor={this.state.color}></RecordButton>
       </span>
     )
   }
@@ -305,9 +302,4 @@ class MyComponent extends StreamlitComponentBase<State> {
 
 }
 
-// "withStreamlitConnection" is a wrapper function. It bootstraps the
-// connection between your component and the Streamlit app, and handles
-// passing arguments from Python -> Component.
-//
-// You don't need to edit withStreamlitConnection (but you're welcome to!).
-export default withStreamlitConnection(AudioRecorder)
+export default withStreamlitConnection(MyComponent)

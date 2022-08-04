@@ -3,6 +3,7 @@ import React from "react"
 export const RecordButton = ({
   onClick,
   fillColor = "white",
+  color = "#6416FF",
   radius = "0",
 }) => {
   return (
@@ -14,7 +15,7 @@ export const RecordButton = ({
       xmlns="http://www.w3.org/2000/svg"
     >
       <circle cx="48.5" cy="48.5" r={radius} fill="#DCDCDC" />
-      <circle cx="49" cy="49" r="33" fill="#6416FF" onClick={onClick} />
+      <circle cx="49" cy="49" r="33" fill={color} onClick={onClick} />
       <g clipPath="url(#clip0)">
         <path
           onClick={onClick}
