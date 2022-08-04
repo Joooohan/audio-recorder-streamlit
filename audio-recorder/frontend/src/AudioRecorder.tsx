@@ -142,7 +142,7 @@ class MyComponent extends StreamlitComponentBase<State> {
     // finally connect the processor to the output
     this.recorder.connect(this.context.destination);
 
-    const self = this;
+    const self = this;  // to reference component from inside the function
     this.recorder.onaudioprocess = function (e: any) {
       // Check
       if (!self.recording) return;
