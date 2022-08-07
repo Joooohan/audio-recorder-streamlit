@@ -18,17 +18,17 @@ _RELEASE = False
 
 if not _RELEASE:
     _audio_recorder = components.declare_component(
-        "my_component",
+        "audio_recorder",
         url="http://localhost:3001",
     )
 else:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend/build")
-    _audio_recorder = components.declare_component("my_component", path=build_dir)
+    _audio_recorder = components.declare_component("audio_recorder", path=build_dir)
 
 
 def audio_recorder(key=None) -> Optional[bytes]:
-    """Create a new instance of "my_component".
+    """Create a new instance of "audio_recorder".
 
     Parameters
     ----------

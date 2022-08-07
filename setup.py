@@ -1,10 +1,10 @@
 import setuptools
 
 setuptools.setup(
-    name="streamlit-custom-component",
+    name="audio-recorder-streamilt",
     version="0.0.1",
-    author="",
-    author_email="",
+    author="Johan Leduc",
+    author_email="johan.leduc90@gmail.com",
     description="",
     long_description="",
     long_description_content_type="text/plain",
@@ -12,7 +12,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=[],
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     install_requires=[
         # By definition, a Custom Component depends on Streamlit.
         # If your component has other Python dependencies, list

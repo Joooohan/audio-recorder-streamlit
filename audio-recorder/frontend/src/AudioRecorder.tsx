@@ -18,7 +18,7 @@ interface AudioData {
 
 const NEUTRAL_COLOR = "#303030";
 const RECORDING_COLOR = "#de1212";
-class MyComponent extends StreamlitComponentBase<State> {
+class AudioRecorder extends StreamlitComponentBase<State> {
   public state = { color: NEUTRAL_COLOR }
 
   stream: MediaStream | null = null;
@@ -269,7 +269,7 @@ class MyComponent extends StreamlitComponentBase<State> {
     // that our component has visuals that match the active theme in a
     // streamlit app.
     const { theme } = this.props
-    const style: React.CSSProperties = {}
+    // const style: React.CSSProperties = {}
 
     // Maintain compatibility with older versions of Streamlit that don't send
     // a theme object.
@@ -302,4 +302,4 @@ class MyComponent extends StreamlitComponentBase<State> {
 
 }
 
-export default withStreamlitConnection(MyComponent)
+export default withStreamlitConnection(AudioRecorder)
