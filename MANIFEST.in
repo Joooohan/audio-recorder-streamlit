@@ -1,0 +1,1 @@
+recursive-include audio_recorder_streamlit/frontend/build *

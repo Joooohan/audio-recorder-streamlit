@@ -1,0 +1,7 @@
+.venv
+**/node_modules
+**/**/build
+dist
+build
+*.egg-info
+.tox
