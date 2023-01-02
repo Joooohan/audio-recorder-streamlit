@@ -17,7 +17,7 @@ if audio_bytes:
     st.audio(audio_bytes, format="audio/wav")
 ```
 
-## Advanced parameters
+## Recording parameters
 
 You can adjust the recording parameters `energy_threshold` and
 `pause_threshold`:
@@ -31,4 +31,22 @@ You can adjust the recording parameters `energy_threshold` and
 # The recording will stop automatically
 # 2 sec after the utterance end
 audio_bytes = audio_recorder(pause_threshold=2.0)
+```
+
+## Styling parameters
+
+You can adjust the button style parameters:
+- **Icon**: specify the icon among the font awesome solid icons
+  (https://fontawesome.com/search?o=r&s=solid)
+- **Color**: specify the neutral color and recording color.
+- **Size**: specify the icon size using font awesome sizing
+  (https://fontawesome.com/docs/web/style/size).
+
+```python
+audio_bytes = audio_recorder(
+    recording_color="#e8b62c",
+    neutral_color="#6aa36f",
+    icon_name="user",
+    icon_size="6x",
+)
 ```
