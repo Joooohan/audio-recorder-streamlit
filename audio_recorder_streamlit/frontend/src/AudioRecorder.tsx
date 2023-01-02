@@ -1,12 +1,12 @@
-import React, { ReactNode } from "react"
+import React, { ReactNode } from "react";
 import {
   Streamlit,
   StreamlitComponentBase,
   withStreamlitConnection
-} from "streamlit-component-lib"
-import RecordButton from "./RecordButton"
+} from "streamlit-component-lib";
+import RecordButton from "./RecordButton";
 
-interface State {
+interface AudioRecorderState {
   color: string
 }
 
@@ -16,10 +16,18 @@ interface AudioData {
   type: string
 }
 
-const NEUTRAL_COLOR = "#303030";
-const RECORDING_COLOR = "#de1212";
-class AudioRecorder extends StreamlitComponentBase<State> {
-  public state = { color: NEUTRAL_COLOR }
+interface AudioRecorderProps {
+  args: Map<string, any>
+  width: number
+  disabled: boolean
+}
+
+
+class AudioRecorder extends StreamlitComponentBase<AudioRecorderState> {
+  public constructor(props: AudioRecorderProps) {
+    super(props)
+    this.state = { color: this.props.args["neutral_color"] }
+  }
 
   stream: MediaStream | null = null;
   AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -28,8 +36,6 @@ class AudioRecorder extends StreamlitComponentBase<State> {
   phrase_buffer_count: number | null = null;
   pause_buffer_count: number | null = null;
   pause_count: number = 0;
-  pause_threshold: number = 0.8;
-  energy_threshold: number = 0.01;
   stage: string | null = null;
   volume: any = null;
   audioInput: any = null;
@@ -108,7 +114,7 @@ class AudioRecorder extends StreamlitComponentBase<State> {
     let bufferSize = 2048;
     let seconds_per_buffer = bufferSize / this.sampleRate!;
     this.pause_buffer_count = Math.ceil(
-      this.pause_threshold / seconds_per_buffer
+      this.props.args["pause_threshold"] / seconds_per_buffer
     );
     this.pause_count = 0;
     this.stage = "start";
@@ -162,10 +168,10 @@ class AudioRecorder extends StreamlitComponentBase<State> {
       let energy = Math.sqrt(
         left.map((x: number) => x * x).reduce((a: number, b: number) => a + b) / left.length
       );
-      if (self.stage === "start" && energy > self.energy_threshold) {
+      if (self.stage === "start" && energy > self.props.args["energy_threshold"]) {
         self.stage = "speaking";
       } else if (self.stage === "speaking") {
-        if (energy > self.energy_threshold) {
+        if (energy > self.props.args["energy_threshold"]) {
           self.pause_count = 0;
         } else {
           self.pause_count += 1;
@@ -188,7 +194,7 @@ class AudioRecorder extends StreamlitComponentBase<State> {
   start = async () => {
     this.recording = true;
     this.setState({
-      color: RECORDING_COLOR
+      color: this.props.args["recording_color"]
     })
     await this.setupMic();
     // reset the buffers for the new recording
@@ -199,7 +205,7 @@ class AudioRecorder extends StreamlitComponentBase<State> {
   stop = async () => {
     this.recording = false;
     this.setState({
-      color: NEUTRAL_COLOR
+      color: this.props.args["neutral_color"]
     })
     this.closeMic();
     console.log(this.recordingLength);
@@ -263,8 +269,6 @@ class AudioRecorder extends StreamlitComponentBase<State> {
   public render = (): ReactNode => {
     const { theme } = this.props
     const text = this.props.args["text"]
-    this.pause_threshold = this.props.args["pause_threshold"]
-    this.energy_threshold = this.props.args["energy_threshold"]
 
     if (theme) {
       // Maintain compatibility with older versions of Streamlit that don't send
