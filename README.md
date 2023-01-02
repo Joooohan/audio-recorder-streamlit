@@ -2,6 +2,8 @@
 
 This streamlit component allows to register an audio utterence from a user.
 
+![recorder.png](img/recorder.png)
+
 ## Installation
 
 `pip install audio-recorder-streamlit`
@@ -50,3 +52,5 @@ audio_bytes = audio_recorder(
     icon_size="6x",
 )
 ```
+
+![custom.png](img/custom.png)

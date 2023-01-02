@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="audio-recorder-streamlit",
-    version="0.0.5",
+    version="0.0.6.dev1",
     author="Johan Leduc",
     author_email="johan.leduc90@gmail.com",
     description="",
@@ -19,6 +19,6 @@ setuptools.setup(
     classifiers=[],
     python_requires=">=3.8",
     install_requires=[
-        "streamlit >= 0.63",
+        "streamlit>=0.63",
     ],
 )
