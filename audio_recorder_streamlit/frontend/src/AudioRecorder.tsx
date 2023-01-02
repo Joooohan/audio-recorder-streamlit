@@ -267,6 +267,9 @@ class AudioRecorder extends StreamlitComponentBase<State> {
   public render = (): ReactNode => {
     const { theme } = this.props
     const text = this.props.args["text"]
+    this.pause_threshold = this.props.args["pause_threshold"]
+    this.phrase_threshold = this.props.args["phrase_threshold"]
+    this.energy_threshold = this.props.args["energy_threshold"]
 
     if (theme) {
       // Maintain compatibility with older versions of Streamlit that don't send
