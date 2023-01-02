@@ -1,10 +1,14 @@
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ReactNode } from "react";
 import {
   Streamlit,
   StreamlitComponentBase,
   withStreamlitConnection
 } from "streamlit-component-lib";
-import RecordButton from "./RecordButton";
+
+library.add(fas)
 
 interface AudioRecorderState {
   color: string
@@ -278,7 +282,13 @@ class AudioRecorder extends StreamlitComponentBase<AudioRecorderState> {
     return (
       <span>
         {text} &nbsp;
-        <RecordButton onClick={this.onClicked} color="white" fillColor={this.state.color}></RecordButton>
+        <FontAwesomeIcon
+        // @ts-ignore
+        icon={this.props.args["icon_name"]}
+        onClick={this.onClicked}
+        style={{color:this.state.color}}
+        size={this.props.args["icon_size"]}
+        />
       </span>
     )
   }
