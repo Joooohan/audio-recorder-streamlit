@@ -38,6 +38,7 @@ audio_bytes = audio_recorder(pause_threshold=2.0)
 ## Styling parameters
 
 You can adjust the button style parameters:
+- **Text**: specify the text displayed next to the icon
 - **Icon**: specify the icon among the font awesome solid icons
   (https://fontawesome.com/search?o=r&s=solid)
 - **Color**: specify the neutral color and recording color.
@@ -46,6 +47,7 @@ You can adjust the button style parameters:
 
 ```python
 audio_bytes = audio_recorder(
+    text="",
     recording_color="#e8b62c",
     neutral_color="#6aa36f",
     icon_name="user",
