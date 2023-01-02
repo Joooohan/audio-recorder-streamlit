@@ -16,3 +16,22 @@ audio_bytes = audio_recorder()
 if audio_bytes:
     st.audio(audio_bytes, format="audio/wav")
 ```
+
+## Advanced parameters
+
+You can adjust the recording parameters `energy_threshold`, `phrase_threshold`
+and `pause_threshold`:
+- `energy_threshold`: The energy recording sensibility above which we consider
+    that the user is speaking.
+- `phrase_treshold`: The number of seconds to spend above `energy_threshold` to
+    start the recording. The initial buffers with no detected sounds will be
+    discarded.
+- `pause_threshold`: The number of seconds to spend below `energy_level` to
+    automatically stop the recording.
+
+
+```python
+# The recording will stop automatically
+# 2 sec after the utterance end
+audio_bytes = audio_recorder(pause_threshold=2.0)
+```
