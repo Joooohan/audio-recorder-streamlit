@@ -5,3 +5,4 @@ dist
 build
 *.egg-info
 .tox
+**/__pycache__
