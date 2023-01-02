@@ -19,13 +19,10 @@ if audio_bytes:
 
 ## Advanced parameters
 
-You can adjust the recording parameters `energy_threshold`, `phrase_threshold`
-and `pause_threshold`:
+You can adjust the recording parameters `energy_threshold` and
+`pause_threshold`:
 - `energy_threshold`: The energy recording sensibility above which we consider
     that the user is speaking.
-- `phrase_treshold`: The number of seconds to spend above `energy_threshold` to
-    start the recording. The initial buffers with no detected sounds will be
-    discarded.
 - `pause_threshold`: The number of seconds to spend below `energy_level` to
     automatically stop the recording.
 

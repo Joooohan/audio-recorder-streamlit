@@ -29,7 +29,6 @@ class AudioRecorder extends StreamlitComponentBase<State> {
   pause_buffer_count: number | null = null;
   pause_count: number = 0;
   pause_threshold: number = 0.8;
-  phrase_threshold: number = 0.3;
   energy_threshold: number = 0.01;
   stage: string | null = null;
   volume: any = null;
@@ -108,9 +107,6 @@ class AudioRecorder extends StreamlitComponentBase<State> {
     // create buffer states counts
     let bufferSize = 2048;
     let seconds_per_buffer = bufferSize / this.sampleRate!;
-    this.phrase_buffer_count = Math.ceil(
-      this.phrase_threshold / seconds_per_buffer
-    );
     this.pause_buffer_count = Math.ceil(
       this.pause_threshold / seconds_per_buffer
     );
@@ -268,7 +264,6 @@ class AudioRecorder extends StreamlitComponentBase<State> {
     const { theme } = this.props
     const text = this.props.args["text"]
     this.pause_threshold = this.props.args["pause_threshold"]
-    this.phrase_threshold = this.props.args["phrase_threshold"]
     this.energy_threshold = this.props.args["energy_threshold"]
 
     if (theme) {

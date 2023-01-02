@@ -4,7 +4,7 @@ from typing import Optional
 
 import streamlit.components.v1 as components
 
-_RELEASE = True
+_RELEASE = False
 
 if not _RELEASE:
     _audio_recorder = components.declare_component(
@@ -23,7 +23,6 @@ def audio_recorder(
     text: str = "Click to record",
     energy_threshold: float = 0.01,
     pause_threshold: float = 0.8,
-    phrase_threshold: float = 0.3,
     key: Optional[str] = None,
 ) -> Optional[bytes]:
     """Create a new instance of "audio_recorder".
@@ -35,10 +34,6 @@ def audio_recorder(
     energy_threshold: float
         The energy recording sensibility above which we consider that the user
         is speaking.
-    phrase_treshold: float
-        The number of seconds to spend above `energy_threshold` to start the
-        recording. The initial buffers with no detected sounds will be
-        discarded.
     pause_threshold: float
         The number of seconds to spend below `energy_level` to automatically
         stop the recording.
@@ -57,7 +52,6 @@ def audio_recorder(
         text=text,
         energy_threshold=energy_threshold,
         pause_threshold=pause_threshold,
-        phrase_threshold=phrase_threshold,
         key=key,
         default=None,
     )
