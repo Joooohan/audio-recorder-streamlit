@@ -2,7 +2,7 @@
 
 This streamlit component allows to register an audio utterence from a user.
 
-![recorder.png](img/recorder.png)
+<img src="img/recorder.png" alt="recorder.png" width="200"/>
 
 ## Installation
 
@@ -52,5 +52,4 @@ audio_bytes = audio_recorder(
     icon_size="6x",
 )
 ```
-
-![custom.png](img/custom.png)
+<img src="img/custom.png" alt="custom.png" width="200"/>
