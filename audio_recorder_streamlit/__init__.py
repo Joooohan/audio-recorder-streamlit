@@ -4,7 +4,7 @@ from typing import Optional
 
 import streamlit.components.v1 as components
 
-_RELEASE = True
+_RELEASE = False
 
 if _RELEASE:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
@@ -27,6 +27,7 @@ def audio_recorder(
     recording_color: str = "#de1212",
     icon_name: str = "microphone",
     icon_size: str = "3x",
+    sample_rate: Optional[int] = None,
     key: Optional[str] = None,
 ) -> Optional[bytes]:
     """Create a new instance of "audio_recorder".
@@ -50,6 +51,9 @@ def audio_recorder(
         (https://fontawesome.com/search?o=r&s=solid)
     icon_size: str
         Size of the icon (https://fontawesome.com/docs/web/style/size)
+    sample_rate: Optional[int]
+        Sample rate of the recorded audio. If not provided, this will use the
+        default sample rate (https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext).
     key: str or None
         An optional key that uniquely identifies this component. If this is
         None, and the component's arguments are changed, the component will be
@@ -69,6 +73,7 @@ def audio_recorder(
         recording_color=recording_color,
         icon_name=icon_name,
         icon_size=icon_size,
+        sample_rate=sample_rate,
         key=key,
         default=None,
     )
@@ -86,6 +91,7 @@ if not _RELEASE:
         neutral_color="#6aa36f",
         icon_name="user",
         icon_size="6x",
+        sample_rate=41_000,
     )
     st.text("Click to record")
     if audio_bytes:

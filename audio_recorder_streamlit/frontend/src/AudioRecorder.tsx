@@ -111,8 +111,17 @@ class AudioRecorder extends StreamlitComponentBase<AudioRecorderState> {
   };
 
   startRecording = () => {
-    this.context = new this.AudioContext();
-    this.sampleRate = this.context.sampleRate;
+    let input_sample_rate = this.props.args["sample_rate"];
+    if (input_sample_rate === null) {
+      this.context = new this.AudioContext();
+      this.sampleRate = this.context.sampleRate;
+    } else {
+      this.context = new this.AudioContext(
+        {"sampleRate": input_sample_rate}
+      );
+      this.sampleRate = input_sample_rate;
+    }
+    console.log(`Sample rate ${this.sampleRate}Hz`);
 
     // create buffer states counts
     let bufferSize = 2048;
