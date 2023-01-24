@@ -24,7 +24,10 @@ if audio_bytes:
 You can adjust the recording parameters `energy_threshold` and
 `pause_threshold`:
 - `energy_threshold`: The energy recording sensibility above which we consider
-    that the user is speaking.
+    that the user is speaking. If it is a float, then this is the energy
+    threshold used to automatically detect recording start and recording end.
+    You can provide a tuple for specifying different threshold for recording
+    start detection and recording end detection.
 - `pause_threshold`: The number of seconds to spend below `energy_level` to
     automatically stop the recording.
 - `sample_rate`: Sample rate of the recorded audio. If not provided, this will use the
@@ -57,3 +60,20 @@ audio_bytes = audio_recorder(
 )
 ```
 <img src="https://raw.githubusercontent.com/Joooohan/audio-recorder-streamlit/main/img/custom.png" alt="custom.png" width="200"/>
+
+# Frequently Asked Question
+## How can I record for a fixed duration ?
+
+You can record for a fixed duration by setting the `energy_threshold=(-1, 1)`
+so that the recorder considers that you are speaking at the beginning and then
+you are never speaking from this point on..
+
+Then simply set `pause_threshold` to your desired recording length.
+
+```python
+# Records 3 seconds in any case
+audio_bytes = audio_recorder(
+  energy_threshold=(-1.0, 1.0),
+  pause_threshold=3.0,
+)
+```

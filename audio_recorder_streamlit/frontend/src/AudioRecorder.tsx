@@ -181,10 +181,10 @@ class AudioRecorder extends StreamlitComponentBase<AudioRecorderState> {
       let energy = Math.sqrt(
         left.map((x: number) => x * x).reduce((a: number, b: number) => a + b) / left.length
       );
-      if (self.stage === "start" && energy > self.props.args["energy_threshold"]) {
+      if (self.stage === "start" && energy > self.props.args["start_threshold"]) {
         self.stage = "speaking";
       } else if (self.stage === "speaking") {
-        if (energy > self.props.args["energy_threshold"]) {
+        if (energy > self.props.args["end_threshold"]) {
           self.pause_count = 0;
         } else {
           self.pause_count += 1;

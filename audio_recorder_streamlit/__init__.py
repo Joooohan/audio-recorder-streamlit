@@ -36,9 +36,12 @@ def audio_recorder(
     ----------
     text: str
         The text to display next to the recording button.
-    energy_threshold: float
+    energy_threshold: Union[float, Tuple[float, float]]
         The energy recording sensibility above which we consider that the user
-        is speaking.
+        is speaking. If it is a float, then this is the energy threshold used
+        to automatically detect recording start and recording end. You can
+        provide a tuple for specifying different threshold for recording start
+        detection and recording end detection.
     pause_threshold: float
         The number of seconds to spend below `energy_level` to automatically
         stop the recording.
@@ -53,7 +56,8 @@ def audio_recorder(
         Size of the icon (https://fontawesome.com/docs/web/style/size)
     sample_rate: Optional[int]
         Sample rate of the recorded audio. If not provided, this will use the
-        default sample rate (https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext).
+        default sample rate
+        (https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext).
     key: str or None
         An optional key that uniquely identifies this component. If this is
         None, and the component's arguments are changed, the component will be
@@ -65,9 +69,16 @@ def audio_recorder(
         Bytes representing the recorded audio in the `audio/wav` format.
 
     """
+    if type(energy_threshold) in [list, tuple]:
+        start_threshold, end_threshold = energy_threshold
+    else:
+        start_threshold = energy_threshold
+        end_threshold = energy_threshold
+
     data = _audio_recorder(
         text=text,
-        energy_threshold=energy_threshold,
+        start_threshold=start_threshold,
+        end_threshold=end_threshold,
         pause_threshold=pause_threshold,
         neutral_color=neutral_color,
         recording_color=recording_color,
@@ -84,8 +95,13 @@ def audio_recorder(
 if not _RELEASE:
     import streamlit as st
 
-    st.subheader("Audio recorder")
-    audio_bytes = audio_recorder(
+    st.subheader("Base audio recorder")
+    base_audio_bytes = audio_recorder()
+    if base_audio_bytes:
+        st.audio(base_audio_bytes, format="audio/wav")
+
+    st.subheader("Custom recorder")
+    custom_audio_bytes = audio_recorder(
         text="",
         recording_color="#e8b62c",
         neutral_color="#6aa36f",
@@ -94,5 +110,14 @@ if not _RELEASE:
         sample_rate=41_000,
     )
     st.text("Click to record")
-    if audio_bytes:
-        st.audio(audio_bytes, format="audio/wav")
+    if custom_audio_bytes:
+        st.audio(custom_audio_bytes, format="audio/wav")
+
+    st.subheader("Fixed length recorder")
+    fixed_audio_bytes = audio_recorder(
+        energy_threshold=(-1.0, 1.0),
+        pause_threshold=3.0,
+    )
+    st.text("Click to record 3 seconds")
+    if fixed_audio_bytes:
+        st.audio(fixed_audio_bytes, format="audio/wav")
