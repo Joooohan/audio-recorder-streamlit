@@ -27,12 +27,14 @@ You can adjust the recording parameters `energy_threshold` and
     that the user is speaking.
 - `pause_threshold`: The number of seconds to spend below `energy_level` to
     automatically stop the recording.
+- `sample_rate`: Sample rate of the recorded audio. If not provided, this will use the
+    default sample rate (https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext).
 
 
 ```python
 # The recording will stop automatically
 # 2 sec after the utterance end
-audio_bytes = audio_recorder(pause_threshold=2.0)
+audio_bytes = audio_recorder(pause_threshold=2.0, sample_rate=41_000)
 ```
 
 ## Styling parameters
