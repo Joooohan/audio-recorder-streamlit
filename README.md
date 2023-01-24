@@ -64,9 +64,9 @@ audio_bytes = audio_recorder(
 # Frequently Asked Question
 ## How can I record for a fixed duration ?
 
-You can record for a fixed duration by setting the `energy_threshold=(-1, 1)`
+You can record for a fixed duration by setting the `energy_threshold=(-1.0, 1.0)`
 so that the recorder considers that you are speaking at the beginning and then
-you are never speaking from this point on..
+you are never speaking from this point on.
 
 Then simply set `pause_threshold` to your desired recording length.
 

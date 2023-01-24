@@ -4,7 +4,7 @@ from typing import Optional
 
 import streamlit.components.v1 as components
 
-_RELEASE = False
+_RELEASE = True
 
 if _RELEASE:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
@@ -96,7 +96,7 @@ if not _RELEASE:
     import streamlit as st
 
     st.subheader("Base audio recorder")
-    base_audio_bytes = audio_recorder()
+    base_audio_bytes = audio_recorder(key="base")
     if base_audio_bytes:
         st.audio(base_audio_bytes, format="audio/wav")
 
@@ -108,6 +108,7 @@ if not _RELEASE:
         icon_name="user",
         icon_size="6x",
         sample_rate=41_000,
+        key="custom"
     )
     st.text("Click to record")
     if custom_audio_bytes:
@@ -117,6 +118,7 @@ if not _RELEASE:
     fixed_audio_bytes = audio_recorder(
         energy_threshold=(-1.0, 1.0),
         pause_threshold=3.0,
+        key="fixed",
     )
     st.text("Click to record 3 seconds")
     if fixed_audio_bytes:
